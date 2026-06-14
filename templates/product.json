@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "shopco_product": {
+      "type": "shopco-product",
+      "settings": {}
+    }
+  },
+  "order": ["shopco_product"]
+}

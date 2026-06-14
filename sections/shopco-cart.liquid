@@ -1,0 +1,209 @@
+{{ 'shopco.css' | asset_url | stylesheet_tag }}
+
+<div class="sc-cart-page">
+  <div class="sc-inner">
+
+    <h1 class="sc-section-title sc-heading">YOUR CART</h1>
+
+    {%- if cart.item_count == 0 -%}
+
+      <div class="sc-cart-empty">
+        <p class="sc-cart-empty__text">Your cart is currently empty.</p>
+        <a href="/collections/all" class="sc-btn sc-btn--primary">Continue Shopping</a>
+      </div>
+
+    {%- else -%}
+
+      <div class="sc-cart-layout">
+
+        <!-- ===== CART ITEMS ===== -->
+        <div class="sc-cart-items-card">
+          {%- for item in cart.items -%}
+            <div class="sc-cart-item" data-key="{{ item.key }}">
+
+              <!-- Product image -->
+              <a href="{{ item.url }}" class="sc-cart-item__img-wrap">
+                {%- if item.image -%}
+                  <img
+                    src="{{ item.image | image_url: width: 200 }}"
+                    alt="{{ item.image.alt | escape }}"
+                    width="112" height="134"
+                    loading="lazy"
+                    class="sc-cart-item__img">
+                {%- else -%}
+                  {{ 'product-apparel-1' | placeholder_svg_tag: 'sc-cart-item__img sc-cart-item__img--placeholder' }}
+                {%- endif -%}
+              </a>
+
+              <!-- Product info -->
+              <div class="sc-cart-item__info">
+                <div class="sc-cart-item__top">
+                  <a href="{{ item.url }}" class="sc-cart-item__name">{{ item.product_title }}</a>
+                  <button
+                    type="button"
+                    class="sc-cart-item__remove"
+                    data-key="{{ item.key }}"
+                    aria-label="Remove {{ item.product_title | escape }}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+
+                {%- unless item.variant.title == 'Default Title' -%}
+                  <p class="sc-cart-item__variant">
+                    {%- for option in item.options_with_values -%}
+                      <span>{{ option.name }}: <strong>{{ option.value }}</strong></span>
+                      {%- unless forloop.last -%}&nbsp;&nbsp;{%- endunless -%}
+                    {%- endfor -%}
+                  </p>
+                {%- endunless -%}
+
+                <div class="sc-cart-item__bottom">
+                  <!-- Qty selector -->
+                  <div class="sc-qty-wrap sc-cart-qty" data-key="{{ item.key }}">
+                    <button type="button" class="sc-qty-btn" data-dir="-1" aria-label="Decrease quantity">−</button>
+                    <input
+                      type="number"
+                      class="sc-qty-input"
+                      value="{{ item.quantity }}"
+                      min="0"
+                      max="99"
+                      aria-label="Quantity for {{ item.product_title | escape }}">
+                    <button type="button" class="sc-qty-btn" data-dir="1" aria-label="Increase quantity">+</button>
+                  </div>
+
+                  <!-- Line price -->
+                  <span class="sc-cart-item__price">{{ item.line_price | money }}</span>
+                </div>
+              </div>
+
+            </div>
+            {%- unless forloop.last -%}
+              <hr class="sc-cart-divider">
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+
+        <!-- ===== ORDER SUMMARY ===== -->
+        <div class="sc-cart-summary">
+          <h2 class="sc-cart-summary__title sc-heading">Order Summary</h2>
+
+          <div class="sc-cart-summary__rows">
+            <div class="sc-cart-summary__row">
+              <span>Subtotal</span>
+              <span>{{ cart.original_total_price | money }}</span>
+            </div>
+            {%- if cart.total_discount > 0 -%}
+              <div class="sc-cart-summary__row sc-cart-summary__row--discount">
+                <span>Discount</span>
+                <span class="sc-cart-summary__discount-val">−{{ cart.total_discount | money }}</span>
+              </div>
+            {%- endif -%}
+            <div class="sc-cart-summary__row">
+              <span>Delivery</span>
+              <span class="sc-cart-summary__free">Free</span>
+            </div>
+          </div>
+
+          <hr class="sc-cart-divider sc-cart-divider--summary">
+
+          <div class="sc-cart-summary__row sc-cart-summary__row--total">
+            <span>Total</span>
+            <span>{{ cart.total_price | money }}</span>
+          </div>
+
+          <!-- Promo code -->
+          <div class="sc-cart-promo">
+            <div class="sc-cart-promo__input-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="7" y1="7" x2="7.01" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <input
+                type="text"
+                id="sc-promo-input"
+                class="sc-cart-promo__input"
+                placeholder="Add promo code"
+                aria-label="Promo code">
+            </div>
+            <button type="button" class="sc-btn sc-btn--outline sc-cart-promo__apply">Apply</button>
+          </div>
+
+          <!-- Checkout -->
+          {% form 'cart', cart, id: 'sc-cart-checkout-form' %}
+            <button name="checkout" type="submit" class="sc-btn sc-btn--primary sc-cart-checkout-btn">
+              Go to Checkout
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          {% endform %}
+
+        </div>
+
+      </div>
+
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var cartPage = document.querySelector('.sc-cart-page');
+  if (!cartPage) return;
+
+  /* ---- Qty +/- buttons ---- */
+  cartPage.addEventListener('click', function (e) {
+    var btn = e.target.closest('.sc-qty-btn');
+    if (!btn) return;
+    var wrap = btn.closest('.sc-cart-qty');
+    var input = wrap.querySelector('.sc-qty-input');
+    var dir = parseInt(btn.dataset.dir, 10);
+    var newVal = Math.max(0, parseInt(input.value, 10) + dir);
+    input.value = newVal;
+    updateCartItem(wrap.dataset.key, newVal);
+  });
+
+  /* ---- Qty input change ---- */
+  cartPage.addEventListener('change', function (e) {
+    var input = e.target.closest('.sc-qty-input');
+    if (!input) return;
+    var wrap = input.closest('.sc-cart-qty');
+    var newVal = Math.max(0, parseInt(input.value, 10) || 0);
+    updateCartItem(wrap.dataset.key, newVal);
+  });
+
+  /* ---- Remove item ---- */
+  cartPage.addEventListener('click', function (e) {
+    var btn = e.target.closest('.sc-cart-item__remove');
+    if (!btn) return;
+    updateCartItem(btn.dataset.key, 0);
+  });
+
+  function updateCartItem(key, quantity) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: quantity })
+    })
+    .then(function () { window.location.reload(); })
+    .catch(function () { window.location.reload(); });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "tag": "div",
+  "class": "shopify-section--cart",
+  "settings": [],
+  "presets": [
+    { "name": "Cart Page" }
+  ]
+}
+{% endschema %}

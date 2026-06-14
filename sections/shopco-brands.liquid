@@ -1,0 +1,60 @@
+{{ 'shopco.css' | asset_url | stylesheet_tag }}
+
+<div class="sc-brands">
+  <div class="sc-brands__inner">
+    {%- for block in section.blocks -%}
+      <div class="sc-brand-logo" {{ block.shopify_attributes }}>
+        {%- if block.settings.logo_image -%}
+          <img
+            src="{{ block.settings.logo_image | image_url: height: 40 }}"
+            alt="{{ block.settings.brand_name | escape }}"
+            loading="lazy"
+            height="40"
+          >
+        {%- else -%}
+          {{ block.settings.brand_name }}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brand Logos Strip",
+  "tag": "div",
+  "class": "shopify-section--brands",
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand name (text fallback)",
+          "default": "VERSACE"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo_image",
+          "label": "Brand logo image (white SVG/PNG)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Logos Strip",
+      "blocks": [
+        { "type": "brand", "settings": { "brand_name": "VERSACE" } },
+        { "type": "brand", "settings": { "brand_name": "ZARA" } },
+        { "type": "brand", "settings": { "brand_name": "GUCCI" } },
+        { "type": "brand", "settings": { "brand_name": "PRADA" } },
+        { "type": "brand", "settings": { "brand_name": "CALVIN KLEIN" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

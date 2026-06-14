@@ -1,0 +1,58 @@
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "shopco_footer": {
+      "type": "shopco-footer",
+      "blocks": {
+        "col_company": {
+          "type": "link_column",
+          "settings": {
+            "heading": "COMPANY",
+            "link_1_label": "About",
+            "link_2_label": "Features",
+            "link_3_label": "Works",
+            "link_4_label": "Career"
+          }
+        },
+        "col_help": {
+          "type": "link_column",
+          "settings": {
+            "heading": "HELP",
+            "link_1_label": "Customer Support",
+            "link_2_label": "Delivery Details",
+            "link_3_label": "Terms & Conditions",
+            "link_4_label": "Privacy Policy"
+          }
+        },
+        "col_faq": {
+          "type": "link_column",
+          "settings": {
+            "heading": "FAQ",
+            "link_1_label": "Account",
+            "link_2_label": "Manage Deliveries",
+            "link_3_label": "Orders",
+            "link_4_label": "Payments"
+          }
+        },
+        "col_resources": {
+          "type": "link_column",
+          "settings": {
+            "heading": "RESOURCES",
+            "link_1_label": "Free eBooks",
+            "link_2_label": "Development Tutorial",
+            "link_3_label": "How to - Blog",
+            "link_4_label": "Youtube Playlist"
+          }
+        }
+      },
+      "block_order": ["col_company", "col_help", "col_faq", "col_resources"],
+      "settings": {
+        "brand_name": "SHOP.CO",
+        "brand_description": "We have clothes that suits your style and which you're proud to wear. From women to men.",
+        "copyright_text": "Shop.co © 2024. All Rights Reserved"
+      }
+    }
+  },
+  "order": ["shopco_footer"]
+}

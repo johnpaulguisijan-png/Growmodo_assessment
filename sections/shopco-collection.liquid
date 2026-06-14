@@ -1,0 +1,387 @@
+{{ 'shopco.css' | asset_url | stylesheet_tag }}
+
+{%- assign products_per_page = section.settings.products_per_page | default: 12 -%}
+
+<div class="sc-collection-page">
+
+  <!-- Breadcrumb -->
+  <nav class="sc-coll-breadcrumb" aria-label="Breadcrumb">
+    <div class="sc-coll-breadcrumb__wrap">
+      <a href="/" class="sc-coll-breadcrumb__link">Home</a>
+      <svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true"><path d="M1 1L6 6L1 11" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="sc-coll-breadcrumb__current">{{ collection.title }}</span>
+    </div>
+  </nav>
+
+  {%- paginate collection.products by products_per_page -%}
+  <div class="sc-coll-layout">
+
+    <!-- ============ FILTER SIDEBAR (desktop: permanent column | mobile: slide-up drawer) ============ -->
+    <aside class="sc-filter-sidebar" id="sc-filter-sidebar">
+
+      <!-- Drag handle — mobile only -->
+      <div class="sc-filter-drag" aria-hidden="true"></div>
+
+      <!-- Header row (mobile shows "Filters" + close; desktop shows title + icon) -->
+      <div class="sc-filter-head">
+        <span class="sc-filter-head__title">Filters</span>
+        <span class="sc-filter-head__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5H17M5.5 10H14.5M8 15H12" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <button class="sc-filter-head__close" id="sc-filter-close" type="button" aria-label="Close filters">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="rgba(0,0,0,0.4)" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="sc-filter-divider"></div>
+
+      <!-- ---- FILTER FORM ---- -->
+      <form class="sc-filter-form" id="sc-filter-form" action="{{ collection.url }}" method="get">
+        {%- if collection.sort_by != blank -%}
+          <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+        {%- endif -%}
+
+        <!-- CATEGORIES -->
+        <div class="sc-filter-section">
+          <ul class="sc-filter-cat-list">
+            {%- assign cats = "T-shirts,Shorts,Shirts,Hoodie,Jeans" | split: ',' -%}
+            {%- for cat in cats -%}
+              {%- assign cat_handle = cat | handle -%}
+              <li class="sc-filter-cat-item">
+                <a href="{{ collection.url }}/{{ cat_handle }}"
+                   class="sc-filter-cat-link{% if current_tags contains cat_handle %} is-active{% endif %}">
+                  {{ cat }}
+                </a>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+
+        <div class="sc-filter-divider"></div>
+
+        <!-- PRICE -->
+        <div class="sc-filter-section">
+          <button type="button" class="sc-filter-section__head sc-filter-toggle-sec" aria-expanded="true">
+            <span class="sc-filter-section__title">Price</span>
+            <svg class="sc-filter-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="sc-filter-section__body">
+            <div class="sc-price-slider">
+              <div class="sc-price-slider__track">
+                <div class="sc-price-slider__fill" id="sc-price-fill"></div>
+                <input type="range" class="sc-price-slider__thumb" id="sc-price-min" name="filter.v.price.gte" min="0" max="500" value="50" step="5">
+                <input type="range" class="sc-price-slider__thumb" id="sc-price-max" name="filter.v.price.lte" min="0" max="500" value="200" step="5">
+              </div>
+              <div class="sc-price-slider__labels">
+                <span id="sc-price-min-lbl">$50</span>
+                <span id="sc-price-max-lbl">$200</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sc-filter-divider"></div>
+
+        <!-- COLORS -->
+        <div class="sc-filter-section">
+          <button type="button" class="sc-filter-section__head sc-filter-toggle-sec" aria-expanded="true">
+            <span class="sc-filter-section__title">Colors</span>
+            <svg class="sc-filter-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="sc-filter-section__body">
+            <div class="sc-color-swatches">
+              {%- assign color_data = "Green|#00C12B,Red|#F50000,Yellow|#F3C200,Orange|#FF7A00,Cyan|#01C5C4,Blue|#4F4FF1,Purple|#8F01C5,Pink|#FF50E5,White|#FFFFFF,Black|#000000" | split: ',' -%}
+              {%- for entry in color_data -%}
+                {%- assign parts = entry | split: '|' -%}
+                {%- assign cname = parts[0] -%}
+                {%- assign chex = parts[1] -%}
+                {%- assign ctag = cname | downcase -%}
+                <label class="sc-color-swatch" title="{{ cname }}">
+                  <input type="checkbox" class="sc-color-swatch__input" name="filter.p.tag" value="{{ ctag }}"
+                         {% if current_tags contains ctag %}checked{% endif %}>
+                  <span class="sc-color-swatch__dot" style="background:{{ chex }};{% if cname == 'White' %}border:1.5px solid rgba(0,0,0,0.2);{% endif %}">
+                    {%- if current_tags contains ctag -%}
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="{% if cname == 'White' %}#000{% else %}#fff{% endif %}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- endif -%}
+                  </span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="sc-filter-divider"></div>
+
+        <!-- SIZE -->
+        <div class="sc-filter-section">
+          <button type="button" class="sc-filter-section__head sc-filter-toggle-sec" aria-expanded="true">
+            <span class="sc-filter-section__title">Size</span>
+            <svg class="sc-filter-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="sc-filter-section__body">
+            <div class="sc-size-chips">
+              {%- assign sizes = "XX-Small,X-Small,Small,Medium,Large,X-Large,XX-Large,3X-Large,4X-Large" | split: ',' -%}
+              {%- for size in sizes -%}
+                {%- assign stag = size | handle -%}
+                <label class="sc-size-chip">
+                  <input type="checkbox" class="sc-size-chip__input" name="filter.p.tag" value="{{ stag }}"
+                         {% if current_tags contains stag %}checked{% endif %}>
+                  <span class="sc-size-chip__label{% if current_tags contains stag %} is-selected{% endif %}">{{ size }}</span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+
+        <div class="sc-filter-divider"></div>
+
+        <!-- DRESS STYLE -->
+        <div class="sc-filter-section">
+          <button type="button" class="sc-filter-section__head sc-filter-toggle-sec" aria-expanded="true">
+            <span class="sc-filter-section__title">Dress Style</span>
+            <svg class="sc-filter-chev" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="sc-filter-section__body">
+            <ul class="sc-filter-cat-list">
+              {%- assign styles = "Casual,Formal,Party,Gym" | split: ',' -%}
+              {%- for style in styles -%}
+                {%- assign shandle = style | handle -%}
+                <li class="sc-filter-cat-item">
+                  <a href="{{ collection.url }}/{{ shandle }}"
+                     class="sc-filter-cat-link{% if current_tags contains shandle %} is-active{% endif %}">
+                    {{ style }}
+                  </a>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="rgba(0,0,0,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Apply button (visible on desktop sidebar) -->
+        <button type="submit" class="sc-btn sc-btn--primary sc-filter-sidebar__apply">Apply Filter</button>
+      </form>
+
+      <!-- Apply button footer — mobile only -->
+      <div class="sc-filter-mfoot">
+        <button type="button" class="sc-btn sc-btn--primary" id="sc-filter-apply">Apply Filter</button>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div class="sc-coll-main">
+
+      <!-- Title + mobile filter button -->
+      <div class="sc-coll-header">
+        <h1 class="sc-coll-title">{{ collection.title }}</h1>
+        <button class="sc-filter-open-btn" id="sc-filter-open" type="button" aria-label="Open filters">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5H17M5.5 10H14.5M8 15H12" stroke="#000" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Filters
+        </button>
+      </div>
+
+      <!-- Count + sort toolbar -->
+      <div class="sc-coll-toolbar">
+        <p class="sc-coll-count">
+          Showing {{ paginate.current_offset | plus: 1 }}&ndash;{{ paginate.current_offset | plus: collection.products.size }} of {{ collection.products_count }} Products
+        </p>
+        <div class="sc-coll-sort-wrap">
+          <span class="sc-coll-sort-label">Sort by:</span>
+          <select class="sc-coll-sort-select" aria-label="Sort products" onchange="window.location=this.value">
+            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            {%- for option in collection.sort_options -%}
+              <option value="{{ collection.url }}?sort_by={{ option.value }}"
+                      {% if option.value == sort_by %}selected{% endif %}>
+                {{ option.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+
+      <!-- Product grid -->
+      <div class="sc-products__grid sc-coll-grid">
+        {%- if collection.products.size > 0 -%}
+          {%- for product in collection.products -%}
+            {%- render 'shopco-product-card', product: product -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..6) -%}
+            <div class="sc-product-card">
+              <div class="sc-product-card__img-wrap sc-product-card__img-placeholder">
+                {{ 'product-apparel-1' | placeholder_svg_tag: 'sc-product-card__img' }}
+              </div>
+              <p class="sc-product-card__name">SAMPLE PRODUCT</p>
+              <div class="sc-product-card__rating">
+                <span class="sc-stars" aria-label="4.5 stars">
+                  {%- for s in (1..4) -%}
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="#FFC633"><path d="M9 1L11.09 6.26L17 7.27L13 11.14L14.18 17L9 14.27L3.82 17L5 11.14L1 7.27L6.91 6.26L9 1Z"/></svg>
+                  {%- endfor -%}
+                </span>
+                <span class="sc-product-card__rating-score">4.5/5</span>
+              </div>
+              <div class="sc-product-card__pricing">
+                <span class="sc-product-card__price">$120</span>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      <!-- Pagination -->
+      {%- if paginate.pages > 1 -%}
+        <div class="sc-pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="sc-pag-btn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Previous
+            </a>
+          {%- else -%}
+            <span class="sc-pag-btn sc-pag-btn--disabled">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Previous
+            </span>
+          {%- endif -%}
+
+          <div class="sc-pag-numbers">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="sc-pag-num">{{ part.title }}</a>
+              {%- elsif part.title == paginate.current_page -%}
+                <span class="sc-pag-num sc-pag-num--active">{{ part.title }}</span>
+              {%- else -%}
+                <span class="sc-pag-num sc-pag-num--ellipsis">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="sc-pag-btn">
+              Next
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          {%- else -%}
+            <span class="sc-pag-btn sc-pag-btn--disabled">
+              Next
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+  {%- endpaginate -%}
+</div>
+
+<!-- Mobile overlay -->
+<div class="sc-filter-overlay" id="sc-filter-overlay" aria-hidden="true"></div>
+
+<script>
+(function () {
+  var sidebar = document.getElementById('sc-filter-sidebar');
+  var overlay = document.getElementById('sc-filter-overlay');
+  var openBtn = document.getElementById('sc-filter-open');
+  var closeBtn = document.getElementById('sc-filter-close');
+  var applyBtn = document.getElementById('sc-filter-apply');
+
+  function openFilter() {
+    sidebar.classList.add('is-open');
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeFilter() {
+    sidebar.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  openBtn && openBtn.addEventListener('click', openFilter);
+  closeBtn && closeBtn.addEventListener('click', closeFilter);
+  overlay && overlay.addEventListener('click', closeFilter);
+  applyBtn && applyBtn.addEventListener('click', function () {
+    var form = document.getElementById('sc-filter-form');
+    if (form) form.submit();
+    else closeFilter();
+  });
+
+  // ---- Price dual-range slider ----
+  var pMin = document.getElementById('sc-price-min');
+  var pMax = document.getElementById('sc-price-max');
+  var pFill = document.getElementById('sc-price-fill');
+  var pMinLbl = document.getElementById('sc-price-min-lbl');
+  var pMaxLbl = document.getElementById('sc-price-max-lbl');
+
+  function updateSlider() {
+    var lo = Math.min(parseInt(pMin.value), parseInt(pMax.value));
+    var hi = Math.max(parseInt(pMin.value), parseInt(pMax.value));
+    var total = parseInt(pMin.max) - parseInt(pMin.min);
+    var p1 = ((lo - parseInt(pMin.min)) / total) * 100;
+    var p2 = ((hi - parseInt(pMin.min)) / total) * 100;
+    pFill.style.left = p1 + '%';
+    pFill.style.width = (p2 - p1) + '%';
+    pMinLbl.textContent = '$' + lo;
+    pMaxLbl.textContent = '$' + hi;
+  }
+
+  if (pMin && pMax) {
+    pMin.addEventListener('input', updateSlider);
+    pMax.addEventListener('input', updateSlider);
+    updateSlider();
+  }
+
+  // ---- Color swatch toggle ----
+  document.querySelectorAll('.sc-color-swatch__input').forEach(function (inp) {
+    inp.addEventListener('change', function () {
+      var dot = this.closest('.sc-color-swatch').querySelector('.sc-color-swatch__dot');
+      var isWhite = this.value === 'white';
+      dot.innerHTML = this.checked
+        ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="' + (isWhite ? '#000' : '#fff') + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        : '';
+    });
+  });
+
+  // ---- Size chip toggle ----
+  document.querySelectorAll('.sc-size-chip__input').forEach(function (inp) {
+    inp.addEventListener('change', function () {
+      this.closest('.sc-size-chip').querySelector('.sc-size-chip__label')
+        .classList.toggle('is-selected', this.checked);
+    });
+  });
+
+  // ---- Collapsible filter sections ----
+  document.querySelectorAll('.sc-filter-toggle-sec').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var body = this.parentElement.querySelector('.sc-filter-section__body');
+      var chev = this.querySelector('.sc-filter-chev');
+      var open = this.getAttribute('aria-expanded') !== 'false';
+      this.setAttribute('aria-expanded', open ? 'false' : 'true');
+      if (body) body.style.display = open ? 'none' : '';
+      if (chev) chev.style.transform = open ? 'rotate(-90deg)' : '';
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Collection Page",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 6,
+      "max": 24,
+      "step": 2,
+      "label": "Products per page",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Page"
+    }
+  ]
+}
+{% endschema %}

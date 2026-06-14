@@ -1,0 +1,186 @@
+{{ 'shopco.css' | asset_url | stylesheet_tag }}
+
+{%- assign total_blocks = section.blocks.size -%}
+
+<div class="sc-testimonials">
+  <div class="sc-testimonials__header">
+    <h2 class="sc-testimonials__title">{{ section.settings.title }}</h2>
+    {%- if total_blocks > 3 -%}
+      <div class="sc-testimonials__nav" role="group" aria-label="Reviews navigation">
+        <button
+          class="sc-testimonials__nav-btn"
+          id="sc-review-prev"
+          aria-label="Previous reviews"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 3L5 8L10 13"/>
+          </svg>
+        </button>
+        <button
+          class="sc-testimonials__nav-btn"
+          id="sc-review-next"
+          aria-label="Next reviews"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 3L11 8L6 13"/>
+          </svg>
+        </button>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="sc-testimonials__track-wrap">
+    <div class="sc-testimonials__track" id="sc-reviews-track">
+      {%- for block in section.blocks -%}
+        <div class="sc-review-card" {{ block.shopify_attributes }}>
+          <div class="sc-review-card__stars">
+            {%- assign stars = block.settings.rating | round -%}
+            <span class="sc-stars" aria-label="{{ block.settings.rating }} out of 5 stars">
+              {%- for s in (1..5) -%}
+                {%- if s <= stars -%}
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="#FFC633" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L11.09 6.26L17 7.27L13 11.14L14.18 17L9 14.27L3.82 17L5 11.14L1 7.27L6.91 6.26L9 1Z"/></svg>
+                {%- else -%}
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="#E0E0E0" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L11.09 6.26L17 7.27L13 11.14L14.18 17L9 14.27L3.82 17L5 11.14L1 7.27L6.91 6.26L9 1Z"/></svg>
+                {%- endif -%}
+              {%- endfor -%}
+            </span>
+          </div>
+
+          <div class="sc-review-card__author">
+            <span class="sc-review-card__name">{{ block.settings.reviewer_name }}</span>
+            <span class="sc-review-card__verified" aria-label="Verified purchase">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 5L4 7L8 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+
+          <p class="sc-review-card__text">{{ block.settings.review_text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var track = document.getElementById('sc-reviews-track');
+  var prevBtn = document.getElementById('sc-review-prev');
+  var nextBtn = document.getElementById('sc-review-next');
+  if (!track) return;
+
+  var currentIndex = 0;
+  var cards = track.querySelectorAll('.sc-review-card');
+  var visibleCount = window.innerWidth < 600 ? 1 : window.innerWidth < 900 ? 2 : 3;
+
+  function updateSlider() {
+    visibleCount = window.innerWidth < 600 ? 1 : window.innerWidth < 900 ? 2 : 3;
+    var maxIndex = Math.max(0, cards.length - visibleCount);
+    currentIndex = Math.min(currentIndex, maxIndex);
+    var cardWidth = cards[0] ? (cards[0].offsetWidth + 20) : 0;
+    track.style.transform = 'translateX(-' + (currentIndex * cardWidth) + 'px)';
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function() {
+      currentIndex = Math.max(0, currentIndex - 1);
+      updateSlider();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function() {
+      var maxIndex = Math.max(0, cards.length - visibleCount);
+      currentIndex = Math.min(maxIndex, currentIndex + 1);
+      updateSlider();
+    });
+  }
+
+  window.addEventListener('resize', updateSlider);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "div",
+  "class": "shopify-section--testimonials",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "OUR HAPPY CUSTOMERS"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Reviewer name",
+          "default": "Sarah M."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Star rating",
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review text",
+          "default": "\"I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.\""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Sarah M.",
+            "rating": 5,
+            "review_text": "\"I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.\""
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Alex K.",
+            "rating": 5,
+            "review_text": "\"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.\""
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "James L.",
+            "rating": 5,
+            "review_text": "\"As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. The selection of clothes is not only diverse but also on-point with the latest trends.\""
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Moana K.",
+            "rating": 5,
+            "review_text": "\"I'm not just a customer of Shop.co, I'm a fan! The quality of their clothes is unparalleled, and their customer service is top-notch. Highly recommend Shop.co to all fashion enthusiasts!\""
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

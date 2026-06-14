@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "shopco_collection": {
+      "type": "shopco-collection",
+      "settings": {
+        "products_per_page": 12
+      }
+    }
+  },
+  "order": ["shopco_collection"]
+}

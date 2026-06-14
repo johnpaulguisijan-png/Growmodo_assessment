@@ -1,0 +1,59 @@
+{{ 'shopco.css' | asset_url | stylesheet_tag }}
+
+<div class="sc-newsletter-wrap">
+  <div class="sc-newsletter">
+    <h2 class="sc-newsletter__title">{{ section.settings.title }}</h2>
+
+    {%- form 'customer', id: 'sc-newsletter-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="sc-newsletter__form">
+        <label for="sc-email" class="visually-hidden">{{ 'general.newsletter_form.email_placeholder' | t }}</label>
+        <input
+          id="sc-email"
+          class="sc-newsletter__input"
+          type="email"
+          name="contact[email]"
+          placeholder="{{ section.settings.placeholder | default: 'Enter your email address' }}"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" class="sc-newsletter__btn">
+          {{ section.settings.button_label | default: 'Subscribe to Newsletter' }}
+        </button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "div",
+  "class": "shopify-section--newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "STAY UPTO DATE ABOUT OUR LATEST OFFERS"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe to Newsletter"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

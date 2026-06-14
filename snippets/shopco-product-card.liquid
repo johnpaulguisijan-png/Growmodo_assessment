@@ -1,0 +1,48 @@
+{%- comment -%}
+  Renders a Shop.co styled product card.
+  Usage: {% render 'shopco-product-card', product: product %}
+{%- endcomment -%}
+
+<a class="sc-product-card" href="{{ product.url }}">
+  <div class="sc-product-card__img-wrap">
+    {%- if product.featured_image -%}
+      <img
+        class="sc-product-card__img"
+        src="{{ product.featured_image | image_url: width: 600 }}"
+        alt="{{ product.featured_image.alt | escape }}"
+        loading="lazy"
+        width="600"
+        height="600"
+      >
+    {%- else -%}
+      <div class="sc-product-card__img-placeholder">
+        {{ 'product-apparel-1' | placeholder_svg_tag }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <p class="sc-product-card__name">{{ product.title | upcase }}</p>
+
+  <div class="sc-product-card__rating">
+    {%- assign rating_value = product.metafields.reviews.rating.value | default: 4.5 -%}
+    <span class="sc-stars" aria-label="{{ rating_value }} out of 5 stars">
+      {%- for s in (1..5) -%}
+        {%- if s <= rating_value -%}
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="#FFC633" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L11.09 6.26L17 7.27L13 11.14L14.18 17L9 14.27L3.82 17L5 11.14L1 7.27L6.91 6.26L9 1Z"/></svg>
+        {%- else -%}
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="#E0E0E0" xmlns="http://www.w3.org/2000/svg"><path d="M9 1L11.09 6.26L17 7.27L13 11.14L14.18 17L9 14.27L3.82 17L5 11.14L1 7.27L6.91 6.26L9 1Z"/></svg>
+        {%- endif -%}
+      {%- endfor -%}
+    </span>
+    <span class="sc-product-card__rating-score">{{ rating_value }}/5</span>
+  </div>
+
+  <div class="sc-product-card__pricing">
+    <span class="sc-product-card__price">{{ product.price | money }}</span>
+    {%- if product.compare_at_price > product.price -%}
+      <span class="sc-product-card__compare">{{ product.compare_at_price | money }}</span>
+      {%- assign discount = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+      <span class="sc-badge-discount">-{{ discount }}%</span>
+    {%- endif -%}
+  </div>
+</a>

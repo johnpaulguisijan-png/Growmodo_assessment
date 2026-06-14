@@ -1,0 +1,205 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "shopco_hero": {
+      "type": "shopco-hero",
+      "settings": {
+        "hero_image": "shopify://shop_images/hero_banner_fcaaba3a-ea62-4596-a718-82708ae5bfed.png",
+        "title": "FIND CLOTHES THAT MATCHES YOUR STYLE",
+        "description": "Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.",
+        "button_label": "Shop Now",
+        "button_link": "/collections/all",
+        "stat1_number": "200+",
+        "stat1_label": "International Brands",
+        "stat2_number": "2,000+",
+        "stat2_label": "High-Quality Products",
+        "stat3_number": "30,000+",
+        "stat3_label": "Happy Customers"
+      }
+    },
+    "shopco_brands": {
+      "type": "shopco-brands",
+      "blocks": {
+        "brand_versace": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "VERSACE"
+          }
+        },
+        "brand_zara": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "ZARA"
+          }
+        },
+        "brand_gucci": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "GUCCI"
+          }
+        },
+        "brand_prada": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "PRADA"
+          }
+        },
+        "brand_ck": {
+          "type": "brand",
+          "settings": {
+            "brand_name": "Calvin Klein"
+          }
+        }
+      },
+      "block_order": [
+        "brand_versace",
+        "brand_zara",
+        "brand_gucci",
+        "brand_prada",
+        "brand_ck"
+      ],
+      "settings": {}
+    },
+    "shopco_new_arrivals": {
+      "type": "shopco-new-arrivals",
+      "settings": {
+        "title": "NEW ARRIVALS",
+        "collection": "new-arrivals",
+        "products_to_show": 4,
+        "view_all_label": "View All",
+        "view_all_link": "/collections/new-arrivals"
+      }
+    },
+    "shopco_top_selling": {
+      "type": "shopco-top-selling",
+      "settings": {
+        "title": "TOP SELLING",
+        "collection": "top-selling",
+        "products_to_show": 4,
+        "view_all_label": "View All",
+        "view_all_link": "/collections/top-selling"
+      }
+    },
+    "shopco_browse_style": {
+      "type": "shopco-browse-style",
+      "blocks": {
+        "casual": {
+          "type": "style_card",
+          "settings": {
+            "label": "Casual",
+            "background_image": "shopify://shop_images/CAS.png",
+            "placeholder_color": "#d6cfc9",
+            "link": ""
+          }
+        },
+        "formal": {
+          "type": "style_card",
+          "settings": {
+            "label": "Formal",
+            "background_image": "shopify://shop_images/FORMAL.png",
+            "placeholder_color": "#c9cfd6",
+            "link": ""
+          }
+        },
+        "party": {
+          "type": "style_card",
+          "settings": {
+            "label": "Party",
+            "background_image": "shopify://shop_images/PARTY.png",
+            "placeholder_color": "#d6c9cf",
+            "link": ""
+          }
+        },
+        "gym": {
+          "type": "style_card",
+          "settings": {
+            "label": "Gym",
+            "background_image": "shopify://shop_images/GYM.png",
+            "placeholder_color": "#cdd6c9",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "casual",
+        "formal",
+        "party",
+        "gym"
+      ],
+      "settings": {
+        "title": "BROWSE BY DRESS STYLE"
+      }
+    },
+    "shopco_testimonials": {
+      "type": "shopco-testimonials",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Sarah M.",
+            "rating": 5,
+            "review_text": "\"I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.\""
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Alex K.",
+            "rating": 5,
+            "review_text": "\"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.\""
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "James L.",
+            "rating": 5,
+            "review_text": "\"As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. The selection of clothes is not only diverse but also on-point with the latest trends.\""
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Moana K.",
+            "rating": 5,
+            "review_text": "\"I'm not just a customer of Shop.co, I'm a fan! The quality of their clothes is unparalleled, and their customer service is top-notch. Highly recommend to all fashion enthusiasts!\""
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3",
+        "review_4"
+      ],
+      "settings": {
+        "title": "OUR HAPPY CUSTOMERS"
+      }
+    },
+    "shopco_newsletter": {
+      "type": "shopco-newsletter",
+      "settings": {
+        "title": "STAY UPTO DATE ABOUT OUR LATEST OFFERS",
+        "placeholder": "Enter your email address",
+        "button_label": "Subscribe to Newsletter"
+      }
+    }
+  },
+  "order": [
+    "shopco_hero",
+    "shopco_brands",
+    "shopco_new_arrivals",
+    "shopco_top_selling",
+    "shopco_browse_style",
+    "shopco_testimonials",
+    "shopco_newsletter"
+  ]
+}

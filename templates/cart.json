@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "shopco_cart": {
+      "type": "shopco-cart",
+      "settings": {}
+    }
+  },
+  "order": ["shopco_cart"]
+}
