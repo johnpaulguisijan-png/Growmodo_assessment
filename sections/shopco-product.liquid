@@ -157,8 +157,8 @@
           </div>
           <button type="submit" name="add" id="sc-add-to-cart"
                   class="sc-btn sc-btn--primary sc-add-to-cart"
-                  {% unless current_variant.available %}disabled{% endunless %}>
-            {%- if current_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+                  {% unless current_variant.available or current_variant.inventory_policy == 'continue' %}disabled{% endunless %}>
+            {%- if current_variant.available or current_variant.inventory_policy == 'continue' -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
           </button>
         </div>
         <div id="sc-atc-message" class="sc-atc-message" aria-live="polite" style="display:none;"></div>
@@ -377,8 +377,9 @@
 
     // Update add to cart button
     if (addBtn) {
-      addBtn.disabled = !variant.available;
-      addBtn.textContent = variant.available ? 'Add to Cart' : 'Sold Out';
+      var canAdd = variant.available || variant.inventory_policy === 'continue';
+      addBtn.disabled = !canAdd;
+      addBtn.textContent = canAdd ? 'Add to Cart' : 'Sold Out';
     }
 
     // Update URL without reload
